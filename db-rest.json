@@ -1,0 +1,23 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "title": "json-server",
+      "author": "typicode"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "scooter": [
+    { "id":1, "status": "ready", "licenseplate": "GFN463", "battery": 76, "registeredarea": "Erfurt"},
+    { "id":2, "status": "ready", "licenseplate": "KRB352", "battery": 42, "registeredarea": "Erfurt"},
+    { "id":3, "status": "ready", "licenseplate": "KFB126", "battery": 32, "registeredarea": "Erfurt"},
+    { "id":4, "status": "inuse", "licenseplate": "PIU433", "battery": 80, "registeredarea": "Erfurt"},
+    { "id":5, "status": "lowonbattery", "licenseplate": "HCV267", "battery": 10, "registeredarea": "Erfurt"}
+]
+}

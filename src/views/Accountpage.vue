@@ -11,7 +11,7 @@ import Header from "@/components/Header.vue";
 import AccountInfo from "@/components/AccountInfo.vue";
 
 export default defineComponent({
-  name: "Account",
+  name: "Accountpage",
   components: {
     Header,
     AccountInfo

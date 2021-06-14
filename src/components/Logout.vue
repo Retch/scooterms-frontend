@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div class="p-d-block p-mx-auto p-mt-6">
     <h1>Sie werden nun abgemeldet...</h1>
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent } from "vue";
 
 export default defineComponent({

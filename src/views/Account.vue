@@ -1,17 +1,13 @@
 <template>
   <div>
-    <HereMap />
+    <h1>Account</h1>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import HereMap from "@/components/Map.vue";
 
 export default defineComponent({
-  name: "Home",
-  components: {
-    HereMap
-  }
+  name: "Account"
 });
 </script>

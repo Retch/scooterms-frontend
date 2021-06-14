@@ -7,7 +7,6 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "start": "vue-cli-service serve --open",
-    "graphql": "json-graphql-server db.js",
     "rest": "json-server db-rest.json"
   },
   "dependencies": {
@@ -20,7 +19,7 @@
     "primevue": "^3.3.5",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
-    "vuex": "^4.0.0"
+    "vuex": "^4.0.1"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^2.33.0",

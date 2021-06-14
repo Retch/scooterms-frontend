@@ -1,11 +1,17 @@
 <template>
-  <div class="">
+  <div class="p-d-flex">
     <Toast />
     <Toast position="top-left" group="tl" />
     <Toast position="bottom-left" group="bl" />
     <Toast position="bottom-right" group="br" />
-    <div class="p-col-12 p-md-3">
-      <div class="p-inputgroup">
+    <div class="p-d-block p-mx-auto p-mt-6  ">
+      <img
+        class=""
+        src="../assets/Logo.png"
+        alt="Scooter-MS Logo"
+        style="height: 30vh"
+      />
+      <div class="p-inputgroup ">
         <span class="p-inputgroup-addon">
           <i class="pi pi-user"></i>
         </span>
@@ -15,11 +21,20 @@
         <span class="p-inputgroup-addon">
           <i class="pi pi-key"></i>
         </span>
-        <Password v-model="this.password" placeholder="Passwort" :feedback="false" />
+        <Password
+          v-model="this.password"
+          placeholder="Passwort"
+          :feedback="false"
+        />
       </div>
-
-      <Button label="Einloggen" @click="login()" class="p-button-secondary" />
-      <Button @click="register()" label="Registrieren" class="p-button-secondary" />
+      <div class="">
+        <Button label="Einloggen" @click="login()" class="p-button-secondary p-mr-2 p-mt-1" />
+        <Button
+          @click="register()"
+          label="Registrieren"
+          class="p-button-secondary"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -40,7 +55,7 @@ export default defineComponent({
         severity: "error",
         summary: "Falsche Zugangsdaten",
         detail: "Vor dem Login bitte Registrieren",
-        life: 5000,
+        life: 5000
       });
     };
 
@@ -49,7 +64,7 @@ export default defineComponent({
         severity: "error",
         summary: "Email bereits registriert",
         detail: "Bitte andere Email wählen oder einloggen",
-        life: 5000,
+        life: 5000
       });
     };
 
@@ -57,7 +72,7 @@ export default defineComponent({
       toast.add({
         severity: "success",
         summary: "Zugangsdaten akzeptiert",
-        life: 1500,
+        life: 1500
       });
     };
 
@@ -66,7 +81,7 @@ export default defineComponent({
         severity: "success",
         summary: "Registrierung erfolgreich",
         detail: "Bitte mit den gewählten Zugangsdaten einloggen",
-        life: 2000,
+        life: 2000
       });
     };
 
@@ -78,14 +93,14 @@ export default defineComponent({
     };
   },
   components: {
-    Toast,
+    Toast
   },
   data() {
     return {
       email: "",
       password: "",
       jwt: "",
-      componentKey: 0,
+      componentKey: 0
     };
   },
   methods: {
@@ -105,7 +120,6 @@ export default defineComponent({
         this.showLoginSuccess();
         const data = res.data;
         this.jwt = data.token;
-        console.log(this.jwt);
         await new Promise(r => setTimeout(r, 2000));
         //console.log(this.$jwt);
         //this.$jwt = data.token;
@@ -134,7 +148,7 @@ export default defineComponent({
       } else {
         this.showRegistrationError();
       }
-    },
-  },
+    }
+  }
 });
 </script>

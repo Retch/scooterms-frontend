@@ -28,13 +28,12 @@ export default {
   data() {
     return {
       isloggedin: false,
-      userjwt: "",
-      componentKey: 0,
+      componentKey: 0
     };
   },
   methods: {
     updateloginstatus() {
-      if (this.$jwt != "novalidtoken") {
+      if (this.$store.state.jwt != "novalidtoken") {
         this.isloggedin = true;
       } else {
         this.isloggedin = false;
@@ -42,13 +41,13 @@ export default {
     },
     login(token) {
       //console.log("Login..." + token);
-      this.$jwt = token;
+      this.$store.state.jwt = token;
       this.updateloginstatus();
-      console.log(this.$jwt);
+      //console.log(this.$jwt);
     },
     logout() {
       //console.log("Logout...");
-      this.$jwt = "novalidtoken";
+      this.$store.state.jwt = "novalidtoken";
       this.updateloginstatus();
       this.forceRerender();
     },

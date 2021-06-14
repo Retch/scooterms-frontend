@@ -3,7 +3,10 @@
     <div class="p-as-center p-ml-1">
       <Button
         icon="pi pi-bars"
-        @click="visibleLeft = true"
+        @click="
+          visibleLeft = true;
+          fetchCredits();
+        "
         class="p-button-text"
       />
     </div>
@@ -25,12 +28,14 @@
     :baseZIndex="1000"
     class="p-sidebar-sm"
   >
-    <h3>Menu</h3>
+    <h3>Scooter-MS</h3>
+    <h4 style="">Guthaben: {{ this.userCredit }}€</h4>
     <div class="">
       <Button
         label="Account"
         icon="pi pi-user"
         class="p-button-text p-d-block"
+        @click="$router.push('account')"
       />
 
       <Button
@@ -43,18 +48,31 @@
   </Sidebar>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent } from "vue";
+import axios from "axios";
 
 export default defineComponent({
   data() {
     return {
       visibleLeft: false,
+      userCredit: 0
     };
   },
   methods: {
     logout() {
       this.$emit("logout");
+    },
+    async fetchCredits() {
+      const res = await axios({
+        method: "get",
+        url: "http://localhost:8080/accountmgr/myaccount",
+        headers: { Authorization: "Bearer " + this.$store.state.jwt }
+      }).catch((error) => {
+        return { error: error };
+      });
+
+      this.userCredit = res.data.creditedEuros;
     }
   }
 });

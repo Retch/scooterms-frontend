@@ -1,13 +1,20 @@
 <template>
   <div>
-    <h1>Account</h1>
+    <Header />
+    <AccountInfo />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import Header from "@/components/Header.vue";
+import AccountInfo from "@/components/AccountInfo.vue";
 
 export default defineComponent({
-  name: "Account"
+  name: "Account",
+  components: {
+    Header,
+    AccountInfo
+  }
 });
 </script>

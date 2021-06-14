@@ -7,11 +7,11 @@
     <div class="p-d-block p-mx-auto p-mt-6  ">
       <img
         class=""
-        src="../assets/Logo.png"
+        src="@/assets/Logo.png"
         alt="Scooter-MS Logo"
         style="height: 30vh"
       />
-      <div class="p-inputgroup ">
+      <div class="p-inputgroup p-mt-3">
         <span class="p-inputgroup-addon">
           <i class="pi pi-user"></i>
         </span>
@@ -28,7 +28,11 @@
         />
       </div>
       <div class="">
-        <Button label="Einloggen" @click="login()" class="p-button-secondary p-mr-2 p-mt-1" />
+        <Button
+          label="Einloggen"
+          @click="login()"
+          class="p-button-secondary p-mr-2 p-mt-1"
+        />
         <Button
           @click="register()"
           label="Registrieren"
@@ -110,7 +114,7 @@ export default defineComponent({
         url: "http://localhost:8080/authenticate",
         data: {
           email: this.email,
-          password: this.password,
+          password: this.password
         },
       }).catch((error) => {
         return { error: error };
@@ -125,6 +129,8 @@ export default defineComponent({
         //this.$jwt = data.token;
         //console.log(this.$jwt);
         this.$emit("jwt-token", data.token);
+        this.$router.push('home');
+        this.$store.state.jwt = data.token;
       } else {
         this.showLoginError();
       }
@@ -135,8 +141,8 @@ export default defineComponent({
         url: "http://localhost:8080/register",
         data: {
           email: this.email,
-          password: this.password,
-        },
+          password: this.password
+        }
       }).catch((error) => {
         return { error: error };
       });

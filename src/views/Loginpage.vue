@@ -1,20 +1,17 @@
 <template>
   <div>
-    <Header />
-    <HereMap />
+    <Login />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import HereMap from "@/components/Map.vue";
-import Header from "@/components/Header.vue";
+import Login from "@/components/Login.vue";
 
 export default defineComponent({
   name: "Home",
   components: {
-    HereMap,
-    Header
+    Login
   }
 });
 </script>

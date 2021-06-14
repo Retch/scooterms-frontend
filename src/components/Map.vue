@@ -104,8 +104,14 @@ export default defineComponent({
     this.initializeHereMap();
   },
   created() {
-    this.timer = setInterval(this.calcTime, 500);
-    this.timer = setInterval(this.reloadScooterMap, 5000);
+    this.calcTimeInterval = setInterval(this.calcTime, 500);
+    this.reloadScooterMapInterval = setInterval(this.reloadScooterMap, 5000);
+    this.timer = this.calcTimeInterval;
+    this.timer = this.reloadScooterMapInterval;
+  },
+  unmounted() {
+    this.timer = clearInterval(this.reloadScooterMapInterval);
+    this.timer = clearInterval(this.calcTimeInterval);
   },
   beforeUnmount() {
     this.starttimestamp = 0;

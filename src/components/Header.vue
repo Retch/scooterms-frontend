@@ -14,12 +14,7 @@
       <h3 style="">Scooter-MS</h3>
     </div>
     <div class="p-as-center p-mr-1">
-      <img
-        alt="logo"
-        src="https://raw.githubusercontent.com/fh-erfurt/Scooter-MS/main/assets/Logo.png"
-        height="40"
-        class=""
-      />
+      <img alt="logo" src="@/assets/Logo.png" height="40" class="" />
     </div>
   </div>
 
@@ -32,12 +27,17 @@
     <h4 style="">Guthaben: {{ this.userCredit }}€</h4>
     <div class="">
       <Button
+        label="Scootermap"
+        icon="pi pi-map"
+        class="p-button-text p-d-block"
+        @click="$router.push('home')"
+      />
+      <Button
         label="Account"
         icon="pi pi-user"
         class="p-button-text p-d-block"
         @click="$router.push('account')"
       />
-
       <Button
         label="Log out"
         @click="logout()"
@@ -61,6 +61,7 @@ export default defineComponent({
   },
   methods: {
     logout() {
+      this.$router.push('logout');
       this.$emit("logout");
     },
     async fetchCredits() {

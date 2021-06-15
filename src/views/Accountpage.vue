@@ -2,6 +2,7 @@
   <div>
     <Header />
     <AccountInfo />
+    <RentalEntityList />
   </div>
 </template>
 
@@ -9,12 +10,14 @@
 import { defineComponent } from "vue";
 import Header from "@/components/Header.vue";
 import AccountInfo from "@/components/AccountInfo.vue";
+import RentalEntityList from "@/components/ScooterRentalEntityList.vue";
 
 export default defineComponent({
   name: "Accountpage",
   components: {
     Header,
-    AccountInfo
+    AccountInfo,
+    RentalEntityList
   }
 });
 </script>

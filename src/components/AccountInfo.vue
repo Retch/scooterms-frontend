@@ -9,10 +9,14 @@
     <p>Guthaben: {{ creditedEuros }}€</p>
   </div>
   <div class="p-field p-grid">
-    <label for="topup" class="p-col-fixed" style="width:100px">Menge</label>
+    <label for="topup" class="p-col-fixed" style="width:100px">Betrag</label>
     <div class="p-col">
-      <InputText id="topup" type="text" />
-      <Button icon="pi pi-check" class="p-button-rounded p-ml-2" />
+      <InputText id="topup" v-model="this.topupamount" type="text" />
+      <Button
+        icon="pi pi-check"
+        class="p-button-rounded p-ml-2"
+        @click="topUpAccount()"
+      />
     </div>
   </div>
 </template>
@@ -27,11 +31,14 @@ export default defineComponent({
     return {
       creditedEuros: 0,
       email: "",
-      id: 0
+      id: 0,
+      topupamount: "",
+      rentals: []
     };
   },
   mounted() {
     this.fetchAccountInfo();
+    this.fetchAccountRentals();
   },
   methods: {
     async fetchAccountInfo() {
@@ -39,13 +46,38 @@ export default defineComponent({
         method: "get",
         url: "http://localhost:8080/accountmgr/myaccount",
         headers: { Authorization: "Bearer " + this.$store.state.jwt }
-      }).catch((error) => {
+      }).catch(error => {
         return { error: error };
       });
 
       this.email = res.data.email;
       this.creditedEuros = res.data.creditedEuros;
       this.id = res.data.id;
+    },
+    async fetchAccountRentals() {
+      const res = await axios({
+        method: "get",
+        url: "http://localhost:8080/accountmgr/myhistory",
+        headers: { Authorization: "Bearer " + this.$store.state.jwt }
+      }).catch(error => {
+        return { error: error };
+      });
+
+      this.rentals = res.data;
+      console.log(this.rentals);
+    },
+    async topUpAccount() {
+      await axios({
+        method: "get",
+        url:
+          "http://localhost:8080/accountmgr/myaccount/topup/" +
+          this.topupamount,
+        headers: { Authorization: "Bearer " + this.$store.state.jwt }
+      }).catch(error => {
+        return { error: error };
+      });
+
+      this.fetchAccountInfo();
     }
   }
 });

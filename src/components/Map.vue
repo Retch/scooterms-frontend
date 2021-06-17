@@ -279,7 +279,6 @@ export default defineComponent({
 
         marker.addEventListener("tap", () => {
           this.showScooterInformation(value);
-          this.showParkSuccess();
         });
         scootermarkers.push(marker);
       };

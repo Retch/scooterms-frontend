@@ -59,6 +59,11 @@ export default defineComponent({
       userCredit: 0
     };
   },
+  mounted() {
+    if (this.$store.state.jwt == "novalidtoken") {
+      this.$router.push("/");
+    }
+  },
   methods: {
     logout() {
       this.$router.push('logout');

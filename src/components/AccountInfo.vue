@@ -1,22 +1,25 @@
 <template>
-  <div class="">
-    <p>Kundennummer: {{ id }}</p>
-  </div>
-  <div class="">
-    <p>Email: {{ email }}</p>
-  </div>
-  <div class="">
-    <p>Guthaben: {{ creditedEuros }}€</p>
-  </div>
-  <div class="p-field p-grid">
-    <label for="topup" class="p-col-fixed" style="width:100px">Betrag</label>
-    <div class="p-col">
-      <InputText id="topup" v-model="this.topupamount" type="text" />
-      <Button
-        icon="pi pi-check"
-        class="p-button-rounded p-ml-2"
-        @click="topUpAccount()"
-      />
+  <div style="display: block;
+    text-align: center;">
+    <div class="">
+      <p>Kundennummer: {{ id }}</p>
+    </div>
+    <div class="">
+      <p>Email: {{ email }}</p>
+    </div>
+    <div class="">
+      <p>Guthaben: {{ creditedEuros }}€</p>
+    </div>
+    <div class="p-field p-grid">
+      <label for="topup" class="p-col-fixed" style="width:100px">Betrag</label>
+      <div class="p-col">
+        <InputText id="topup" v-model="this.topupamount" type="text" />
+        <Button
+          icon="pi pi-check"
+          class="p-button-rounded p-ml-2"
+          @click="topUpAccount()"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -33,12 +36,10 @@ export default defineComponent({
       email: "",
       id: 0,
       topupamount: "",
-      rentals: []
     };
   },
   mounted() {
     this.fetchAccountInfo();
-    this.fetchAccountRentals();
   },
   methods: {
     async fetchAccountInfo() {
@@ -53,18 +54,6 @@ export default defineComponent({
       this.email = res.data.email;
       this.creditedEuros = res.data.creditedEuros;
       this.id = res.data.id;
-    },
-    async fetchAccountRentals() {
-      const res = await axios({
-        method: "get",
-        url: "http://localhost:8080/accountmgr/myhistory",
-        headers: { Authorization: "Bearer " + this.$store.state.jwt }
-      }).catch(error => {
-        return { error: error };
-      });
-
-      this.rentals = res.data;
-      console.log(this.rentals);
     },
     async topUpAccount() {
       await axios({

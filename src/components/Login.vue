@@ -116,7 +116,7 @@ export default defineComponent({
           email: this.email,
           password: this.password
         },
-      }).catch((error) => {
+      }).catch(error => {
         return { error: error };
       });
 
@@ -129,7 +129,7 @@ export default defineComponent({
         //this.$jwt = data.token;
         //console.log(this.$jwt);
         this.$emit("jwt-token", data.token);
-        this.$router.push('home');
+        this.$router.push("home");
         this.$store.state.jwt = data.token;
       } else {
         this.showLoginError();

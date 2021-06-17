@@ -1,10 +1,12 @@
 <template>
-  <div class="p-d-block p-mx-auto p-mt-6">
+  <div class="p-d-block p-mx-auto p-m-0 p-mt-6">
     <div v-for="rental in rentals" :key="rental.id">
-      <Card class="p-mb-2" style="width: 25rem">>
+      <Card class="p-mb-2 p-mx-auto" style="width: 25rem">>
         <template #title> Fahrt #{{ rental.id }} </template>
         <template #content>
-          Dauer: {{ calcTime(rental.end_timestamp - rental.start_timestamp) }} Minuten
+          Datum: {{ calcDate(rental.start_timestamp) }}<br />
+          Dauer:
+          {{ calcTime(rental.end_timestamp - rental.start_timestamp) }} Minuten
         </template>
       </Card>
     </div>
@@ -51,6 +53,12 @@ export default defineComponent({
         seconds = "0" + seconds;
       }
       return minutes + ":" + seconds;
+    },
+    calcDate(timestamp) {
+      const date = new Date(timestamp * 1000);
+      return (
+        date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear()
+      );
     }
   }
 });

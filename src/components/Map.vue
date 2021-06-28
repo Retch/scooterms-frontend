@@ -49,6 +49,51 @@
         />
       </template>
     </Card>
+    <Card
+      v-if="showscooterhotspotinfo === true && starttimestamp == 0"
+      :key="componentKey"
+      style="width: 25rem; margin-bottom: 2em; position:absolute; bottom:0; left:0;"
+    >
+      <template #title>
+        <Button
+          @click="closeScooterHotspotInformation()"
+          icon="pi pi-times"
+          class="p-button-rounded p-button-danger p-button-outlined"
+        />
+        Scooterhotspot {{ selectedscooterhotspot.name }}
+      </template>
+
+      <template #content>
+        Stellplätze frei:
+        {{
+          selectedscooterhotspot.maxscootercount -
+            selectedscooterhotspot.scootercount
+        }}<br />
+        <br />
+      </template>
+    </Card>
+    <Card
+      v-if="showmaintenancedepartmentinfo === true && starttimestamp == 0"
+      :key="componentKey"
+      style="width: 25rem; margin-bottom: 2em; position:absolute; bottom:0; left:0;"
+    >
+      <template #title>
+        <Button
+          @click="closeMaintenanceDepartmentInformation()"
+          icon="pi pi-times"
+          class="p-button-rounded p-button-danger p-button-outlined"
+        />
+        Maintenancedepartment {{ selectedmaintenancedepartment.name }}
+      </template>
+
+      <template #content>
+        Reparaturkapazität:
+        {{ selectedmaintenancedepartment.scootercapacity }}/{{
+          selectedmaintenancedepartment.maxscootercapacity
+        }}<br />
+        <br />
+      </template>
+    </Card>
   </div>
 </template>
 
@@ -67,7 +112,7 @@ export default defineComponent({
     const showParkSuccess = () => {
       toast.add({
         severity: "success",
-        summary: "Zugangsdaten akzeptiert",
+        summary: "Scooter abgestellt",
         life: 1500
       });
 
@@ -88,8 +133,14 @@ export default defineComponent({
       platform: null,
       apikey: "UCQF_BUyy0csLSNw3Tp6qr08CVT_YnS0xtObBme-_js", // You can get the API KEY from developer.here.com
       scooterlist: [],
-      selectedscooter: "",
+      scooterhotspotlist: [],
+      maintenancedepartmentlist: [],
+      selectedscooter: null,
+      selectedscooterhotspot: null,
+      selectedmaintenancedepartment: null,
       showscooterinfo: false,
+      showscooterhotspotinfo: false,
+      showmaintenancedepartmentinfo: false,
       starttimestamp: 0,
       rentaltime: 0
     };
@@ -140,6 +191,28 @@ export default defineComponent({
 
       return res.data;
     },
+    async fetchScooterHotspots() {
+      const res = await axios({
+        method: "get",
+        url: "http://localhost:8080/scooterhotspots",
+        headers: { Authorization: "Bearer " + this.$store.state.jwt }
+      }).catch((error) => {
+        return { error: error };
+      });
+
+      this.scooterhotspotlist = res.data;
+    },
+    async fetchMaintenanceDepartments() {
+      const res = await axios({
+        method: "get",
+        url: "http://localhost:8080/maintenancedepartments",
+        headers: { Authorization: "Bearer " + this.$store.state.jwt }
+      }).catch((error) => {
+        return { error: error };
+      });
+
+      this.maintenancedepartmentlist = res.data;
+    },
     async reloadScooterMap() {
       //console.log("reload map");
       const list = await this.returnScooters();
@@ -149,8 +222,6 @@ export default defineComponent({
       ) {
         await this.initializeHereMap();
       }
-      //console.log(JSON.stringify(list));
-      //console.log(JSON.stringify(this.scooterlist));
     },
     async forceReloadScooterMap() {
       await this.initializeHereMap();
@@ -169,14 +240,40 @@ export default defineComponent({
         this.rentaltime = minutes + ":" + seconds;
       }
     },
-    showScooterInformation(scooter) {
+    showScooterInformation(s) {
       this.showscooterinfo = true;
-      this.selectedscooter = scooter;
+      this.selectedscooter = s;
+      this.closeScooterHotspotInformation();
+      this.closeMaintenanceDepartmentInformation();
       this.forceRerenderInfo();
     },
     closeScooterInformation() {
       this.showscooterinfo = false;
       this.selectedscooter = null;
+      this.forceRerenderInfo();
+    },
+    showScooterHotspotInformation(h) {
+      this.showscooterhotspotinfo = true;
+      this.selectedscooterhotspot = h;
+      this.closeScooterInformation();
+      this.closeMaintenanceDepartmentInformation();
+      this.forceRerenderInfo();
+    },
+    closeScooterHotspotInformation() {
+      this.showscooterhotspotinfo = false;
+      this.selectedscooterhotspot = null;
+      this.forceRerenderInfo();
+    },
+    showMaintenanceDepartmentInformation(md) {
+      this.showmaintenancedepartmentinfo = true;
+      this.selectedmaintenancedepartment = md;
+      this.closeScooterInformation();
+      this.closeScooterHotspotInformation();
+      this.forceRerenderInfo();
+    },
+    closeMaintenanceDepartmentInformation() {
+      this.showmaintenancedepartmentinfo = false;
+      this.selectedmaintenancedepartment = null;
       this.forceRerenderInfo();
     },
     async driveScooter() {
@@ -219,6 +316,7 @@ export default defineComponent({
       this.starttimestamp = 0;
       this.rentaltime = 0;
       this.closeScooterInformation();
+      this.showParkSuccess();
       await new Promise(r => setTimeout(r, 2000));
       this.forceReloadScooterMap();
     },
@@ -229,6 +327,8 @@ export default defineComponent({
       // rendering map
 
       await this.fetchScooters();
+      await this.fetchScooterHotspots();
+      await this.fetchMaintenanceDepartments();
 
       const mapContainer = this.$refs.hereMap;
       const H = window.H;
@@ -254,9 +354,20 @@ export default defineComponent({
         "https://i.ibb.co/crBCp22/Orange.png",
         { size: { w: 32, h: 32 } }
       );
-      const scootermarkers = [];
+      const ScooterHotspotIcon = new H.map.Icon(
+        "https://i.ibb.co/dG1KBVR/parking.png",
+        { size: { w: 28, h: 28 } }
+      );
+      const MaintenanceDepartmentIcon = new H.map.Icon(
+        "https://i.ibb.co/KGTNY1D/repair.png",
+        { size: { w: 28, h: 28 } }
+      );
 
-      const scooterparse = (value, index, array) => {
+      const scootermarkers = [];
+      const scooterhotspotmarkers = [];
+      const maintenancedepartmentmarkers = [];
+
+      const scooterParse = (value, index, array) => {
         let image = "";
         switch (value.status) {
           case "damaged":
@@ -282,17 +393,47 @@ export default defineComponent({
         });
         scootermarkers.push(marker);
       };
-      /*if (this.scooterlist == null) {
-        console.log("scooterlist empty");
-      } else {
-        console.log("scooterlist NOT empty");
-      }*/
-      this.scooterlist.forEach(scooterparse);
+
+      const scooterHotspotParse = (value, index, array) => {
+        const marker = new H.map.Marker(
+          {
+            lat: value.ndegree,
+            lng: value.edegree
+          },
+          { icon: ScooterHotspotIcon }
+        );
+
+        marker.addEventListener("tap", () => {
+          this.showScooterHotspotInformation(value);
+        });
+        scooterhotspotmarkers.push(marker);
+      };
+
+      const MaintenanceDepartmentParse = (value, index, array) => {
+        const marker = new H.map.Marker(
+          {
+            lat: value.ndegree,
+            lng: value.edegree
+          },
+          { icon: MaintenanceDepartmentIcon }
+        );
+
+        marker.addEventListener("tap", () => {
+          this.showMaintenanceDepartmentInformation(value);
+        });
+        maintenancedepartmentmarkers.push(marker);
+      };
+
+      this.scooterlist.forEach(scooterParse);
+      this.scooterhotspotlist.forEach(scooterHotspotParse);
+      this.maintenancedepartmentlist.forEach(MaintenanceDepartmentParse);
 
       const placemarkers = (value, index, array) => {
         map.addObject(value);
       };
       scootermarkers.forEach(placemarkers);
+      scooterhotspotmarkers.forEach(placemarkers);
+      maintenancedepartmentmarkers.forEach(placemarkers);
 
       addEventListener("resize", () => map.getViewPort().resize());
 

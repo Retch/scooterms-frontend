@@ -1,9 +1,6 @@
 <template>
   <div class="p-d-flex">
-    <Toast />
-    <Toast position="top-left" group="tl" />
-    <Toast position="bottom-left" group="bl" />
-    <Toast position="bottom-right" group="br" />
+    <Toast class="Toast" />
     <div class="p-d-block p-mx-auto p-mt-6  ">
       <img
         class=""
@@ -158,3 +155,9 @@ export default defineComponent({
   }
 });
 </script>
+
+<style>
+.Toast {
+  max-width: 90vw;
+}
+</style>

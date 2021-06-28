@@ -1,10 +1,12 @@
 <template>
   <div>
     <Header />
-    <AccountInfo style="display: inline-block;
+    <AccountInfo
+      style="display: inline-block;
     margin-left: 40vw;
     margin-right: auto;
-    text-align: left" />
+    text-align: left"
+    />
     <RentalEntityList />
   </div>
 </template>

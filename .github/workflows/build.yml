@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  jsdoc-create:
+  build-vue:
     runs-on: ubuntu-latest
     
     strategy:
@@ -18,7 +18,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         
-      - name: Build jsdoc with Node.js ${{ matrix.node-version }}
+      - name: Build vue app
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}

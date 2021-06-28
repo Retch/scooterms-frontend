@@ -14,7 +14,12 @@
       <h3 style="">Scooter-MS</h3>
     </div>
     <div class="p-as-center p-mr-1">
-      <img alt="logo" src="../assets/Logo.png" height="40" class="" />
+      <img
+        alt="logo"
+        src="https://i.ibb.co/5MZBcW1/Logo.png"
+        height="40"
+        class=""
+      />
     </div>
   </div>
 

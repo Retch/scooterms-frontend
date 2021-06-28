@@ -4,7 +4,7 @@
     <div class="p-d-block p-mx-auto p-mt-6  ">
       <img
         class=""
-        src="../assets/Logo.png"
+        src="https://i.ibb.co/5MZBcW1/Logo.png"
         alt="Scooter-MS Logo"
         style="height: 30vh"
       />

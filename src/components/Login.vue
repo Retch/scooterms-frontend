@@ -4,7 +4,7 @@
     <div class="p-d-block p-mx-auto p-mt-6  ">
       <img
         class=""
-        src="@/assets/Logo.png"
+        src="../assets/Logo.png"
         alt="Scooter-MS Logo"
         style="height: 30vh"
       />
@@ -90,7 +90,7 @@ export default defineComponent({
       showLoginError,
       showRegistrationError,
       showLoginSuccess,
-      showRegistrationSuccess,
+      showRegistrationSuccess
     };
   },
   components: {
@@ -112,7 +112,7 @@ export default defineComponent({
         data: {
           email: this.email,
           password: this.password
-        },
+        }
       }).catch(error => {
         return { error: error };
       });
@@ -140,7 +140,7 @@ export default defineComponent({
           email: this.email,
           password: this.password
         }
-      }).catch((error) => {
+      }).catch(error => {
         return { error: error };
       });
 

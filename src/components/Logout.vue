@@ -20,7 +20,7 @@ export default defineComponent({
       this.$router.push("/");
     } else {
       this.$store.state.jwt = "novalidtoken";
-      await new Promise(r => setTimeout(r, 2500));
+      await new Promise(r => setTimeout(r, 2525));
       this.$router.push("/");
     }
   }

@@ -56,7 +56,8 @@ export default defineComponent({
         severity: "error",
         summary: "Falsche Zugangsdaten",
         detail: "Vor dem Login bitte Registrieren",
-        life: 5000
+        life: 5000,
+        closeable: false
       });
     };
 
@@ -65,7 +66,8 @@ export default defineComponent({
         severity: "error",
         summary: "Email bereits registriert",
         detail: "Bitte andere Email wählen oder einloggen",
-        life: 5000
+        life: 5000,
+        closeable: false
       });
     };
 
@@ -73,7 +75,8 @@ export default defineComponent({
       toast.add({
         severity: "success",
         summary: "Zugangsdaten akzeptiert",
-        life: 1500
+        life: 1500,
+        closeable: false
       });
     };
 
@@ -82,7 +85,8 @@ export default defineComponent({
         severity: "success",
         summary: "Registrierung erfolgreich",
         detail: "Bitte mit den gewählten Zugangsdaten einloggen",
-        life: 2000
+        life: 2000,
+        closeable: false
       });
     };
 

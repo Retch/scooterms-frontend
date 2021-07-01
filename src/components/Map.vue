@@ -9,7 +9,11 @@
       :key="scooterlist"
     ></div>
     <Card
-      v-if="showscooterinfo === true && starttimestamp == 0"
+      v-if="
+        showscooterinfo === true &&
+          starttimestamp == 0 &&
+          selectedscooter.status == 'ready'
+      "
       :key="componentKey"
       style="width: 25rem; margin-bottom: 2em; position:absolute; bottom:0; left:0;"
     >
@@ -50,6 +54,62 @@
       </template>
     </Card>
     <Card
+      v-if="
+        showscooterinfo === true &&
+          starttimestamp == 0 &&
+          selectedscooter.status == 'lowonbattery'
+      "
+      :key="componentKey"
+      style="width: 25rem; margin-bottom: 2em; position:absolute; bottom:0; left:0;"
+    >
+      <template #title>
+        <Button
+          @click="closeScooterInformation()"
+          icon="pi pi-times"
+          class="p-button-rounded p-button-danger p-button-outlined"
+        />
+        Scooter {{ selectedscooter.licenseplate }}
+      </template>
+
+      <template #content>
+        Akku: {{ selectedscooter.battery }}%<br />
+        <br />
+        <Button
+          @click="chargeScooter()"
+          label="Aufladen"
+          class="p-button-rounded"
+        />
+      </template>
+    </Card>
+    <Card
+      v-if="
+        showscooterinfo === true &&
+          starttimestamp == 0 &&
+          selectedscooter.status == 'damaged'
+      "
+      :key="componentKey"
+      style="width: 25rem; margin-bottom: 2em; position:absolute; bottom:0; left:0;"
+    >
+      <template #title>
+        <Button
+          @click="closeScooterInformation()"
+          icon="pi pi-times"
+          class="p-button-rounded p-button-danger p-button-outlined"
+        />
+        Scooter {{ selectedscooter.licenseplate }}
+      </template>
+
+      <template #content>
+        Akku: {{ selectedscooter.battery }}%<br />
+        <br />
+        <Button
+          @click="repairScooter()"
+          label="Reparieren"
+          class="p-button-rounded"
+        />
+      </template>
+    </Card>
+    <Card
       v-if="showscooterhotspotinfo === true && starttimestamp == 0"
       :key="componentKey"
       style="width: 25rem; margin-bottom: 2em; position:absolute; bottom:0; left:0;"
@@ -61,15 +121,6 @@
           class="p-button-rounded p-button-danger p-button-outlined"
         />
         Scooterhotspot {{ selectedscooterhotspot.name }}
-      </template>
-
-      <template #content>
-        Stellplätze frei:
-        {{
-          selectedscooterhotspot.maxscootercount -
-            selectedscooterhotspot.scootercount
-        }}<br />
-        <br />
       </template>
     </Card>
     <Card
@@ -85,13 +136,16 @@
         />
         Maintenancedepartment {{ selectedmaintenancedepartment.name }}
       </template>
-
       <template #content>
         Reparaturkapazität:
         {{ selectedmaintenancedepartment.scootercapacity }}/{{
           selectedmaintenancedepartment.maxscootercapacity
         }}<br />
-        <br />
+        <Button
+          @click="releaseScooter()"
+          label="Release"
+          class="p-button-rounded"
+        />
       </template>
     </Card>
   </div>
@@ -113,10 +167,40 @@ export default defineComponent({
       toast.add({
         severity: "success",
         summary: "Scooter abgestellt",
-        life: 1500
+        life: 1500,
+        closeable: false
       });
+    };
+    const showChargeSuccess = eurocredits => {
+      toast.add({
+        severity: "success",
+        summary: eurocredits + "€ Gutschrift für das Aufladen",
+        life: 2500,
+        closeable: false
+      });
+    };
+    const showBringToRepairSuccess = () => {
+      toast.add({
+        severity: "success",
+        summary: "Scooter wird nun repariert",
+        life: 2000,
+        closeable: false
+      });
+    };
+    const showReleaseFromRepairSuccess = () => {
+      toast.add({
+        severity: "success",
+        summary: "Reparatur abgeschlossen",
+        life: 2000,
+        closeable: false
+      });
+    };
 
-      return showParkSuccess;
+    return {
+      showParkSuccess,
+      showChargeSuccess,
+      showBringToRepairSuccess,
+      showReleaseFromRepairSuccess
     };
   },
   components: {
@@ -132,9 +216,9 @@ export default defineComponent({
       componentKey: 0,
       platform: null,
       apikey: "UCQF_BUyy0csLSNw3Tp6qr08CVT_YnS0xtObBme-_js", // You can get the API KEY from developer.here.com
-      scooterlist: [],
-      scooterhotspotlist: [],
-      maintenancedepartmentlist: [],
+      scooterlist: null,
+      scooterhotspotlist: null,
+      maintenancedepartmentlist: null,
       selectedscooter: null,
       selectedscooterhotspot: null,
       selectedmaintenancedepartment: null,
@@ -174,18 +258,19 @@ export default defineComponent({
         method: "get",
         url: "http://localhost:8080/scooters",
         headers: { Authorization: "Bearer " + this.$store.state.jwt }
-      }).catch((error) => {
+      }).catch(error => {
         return { error: error };
       });
-
-      this.scooterlist = res.data;
+      if (res.status === 200) {
+        this.scooterlist = res.data;
+      }
     },
     async returnScooters() {
       const res = await axios({
         method: "get",
         url: "http://localhost:8080/scooters",
         headers: { Authorization: "Bearer " + this.$store.state.jwt }
-      }).catch((error) => {
+      }).catch(error => {
         return { error: error };
       });
 
@@ -196,22 +281,24 @@ export default defineComponent({
         method: "get",
         url: "http://localhost:8080/scooterhotspots",
         headers: { Authorization: "Bearer " + this.$store.state.jwt }
-      }).catch((error) => {
+      }).catch(error => {
         return { error: error };
       });
-
-      this.scooterhotspotlist = res.data;
+      if (res.status === 200) {
+        this.scooterhotspotlist = res.data;
+      }
     },
     async fetchMaintenanceDepartments() {
       const res = await axios({
         method: "get",
         url: "http://localhost:8080/maintenancedepartments",
         headers: { Authorization: "Bearer " + this.$store.state.jwt }
-      }).catch((error) => {
+      }).catch(error => {
         return { error: error };
       });
-
-      this.maintenancedepartmentlist = res.data;
+      if (res.status === 200) {
+        this.maintenancedepartmentlist = res.data;
+      }
     },
     async reloadScooterMap() {
       //console.log("reload map");
@@ -283,9 +370,7 @@ export default defineComponent({
         method: "get",
         url: api,
         headers: { Authorization: "Bearer " + this.$store.state.jwt }
-        //headers: { Authorization: "Bearer " + this.$store.state.jwt }
-        //Authorization: "Bearer " + this.$store.state.jwt,
-      }).catch((error) => {
+      }).catch(error => {
         return { error: error };
       });
 
@@ -310,7 +395,7 @@ export default defineComponent({
           latitude: lat,
           longitude: lng
         }
-      }).catch((error) => {
+      }).catch(error => {
         return { error: error };
       });
       this.starttimestamp = 0;
@@ -318,6 +403,58 @@ export default defineComponent({
       this.closeScooterInformation();
       this.showParkSuccess();
       await new Promise(r => setTimeout(r, 2000));
+      this.forceReloadScooterMap();
+    },
+    async chargeScooter() {
+      const scooterID = this.selectedscooter.id;
+      const api = "http://localhost:8080/scooters/charge/" + scooterID;
+      const res = await axios({
+        method: "get",
+        url: api,
+        headers: { Authorization: "Bearer " + this.$store.state.jwt }
+      }).catch(error => {
+        return { error: error };
+      });
+      if (res.status === 200) {
+        this.showChargeSuccess(res.data);
+        this.closeScooterInformation();
+      }
+      await new Promise(r => setTimeout(r, 1000));
+      this.forceReloadScooterMap();
+    },
+    async repairScooter() {
+      const scooterID = this.selectedscooter.id;
+      const api = "http://localhost:8080/scooters/repair/" + scooterID;
+      const res = await axios({
+        method: "get",
+        url: api,
+        headers: { Authorization: "Bearer " + this.$store.state.jwt }
+      }).catch(error => {
+        return { error: error };
+      });
+      if (res.status === 200) {
+        this.showBringToRepairSuccess();
+        this.closeScooterInformation();
+      }
+      await new Promise(r => setTimeout(r, 500));
+      this.forceReloadScooterMap();
+    },
+    async releaseScooter() {
+      const api =
+        "http://localhost:8080/maintenancedepartments/releasescooter/" +
+        this.selectedmaintenancedepartment.id;
+      const res = await axios({
+        method: "get",
+        url: api,
+        headers: { Authorization: "Bearer " + this.$store.state.jwt }
+      }).catch(error => {
+        return { error: error };
+      });
+      if (res.status === 200) {
+        this.showReleaseFromRepairSuccess();
+        this.closeMaintenanceDepartmentInformation();
+      }
+      await new Promise(r => setTimeout(r, 500));
       this.forceReloadScooterMap();
     },
     forceRerenderInfo() {
@@ -424,9 +561,15 @@ export default defineComponent({
         maintenancedepartmentmarkers.push(marker);
       };
 
-      this.scooterlist.forEach(scooterParse);
-      this.scooterhotspotlist.forEach(scooterHotspotParse);
-      this.maintenancedepartmentlist.forEach(MaintenanceDepartmentParse);
+      if (this.scooterlist) {
+        this.scooterlist.forEach(scooterParse);
+      }
+      if (this.scooterhotspotlist) {
+        this.scooterhotspotlist.forEach(scooterHotspotParse);
+      }
+      if (this.maintenancedepartmentlist) {
+        this.maintenancedepartmentlist.forEach(MaintenanceDepartmentParse);
+      }
 
       const placemarkers = (value, index, array) => {
         map.addObject(value);

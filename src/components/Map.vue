@@ -4,6 +4,7 @@
     <!--In the following div the HERE Map will render-->
     <div
       id="mapContainer"
+      class="map"
       style="height: 93vh"
       ref="hereMap"
       :key="scooterlist"
@@ -15,13 +16,13 @@
           selectedscooter.status == 'ready'
       "
       :key="componentKey"
-      style="width: 25rem; margin-bottom: 2em; position:absolute; bottom:0; left:0;"
+      class="Infopopup p-shadow-2"
     >
       <template #title>
         <Button
           @click="closeScooterInformation()"
           icon="pi pi-times"
-          class="p-button-rounded p-button-danger p-button-outlined"
+          class="p-button-rounded p-button-danger p-button-outlined p-mr-auto"
         />
         Scooter {{ selectedscooter.licenseplate }}
       </template>
@@ -39,7 +40,7 @@
     <Card
       v-if="starttimestamp != 0"
       :key="rentaltime"
-      style="width: 25rem; margin-bottom: 2em; position:absolute; bottom:0; left:0;"
+      class="Infopopup p-shadow-2"
     >
       <template #title>Scooter: {{ selectedscooter.licenseplate }}</template>
 
@@ -60,7 +61,7 @@
           selectedscooter.status == 'lowonbattery'
       "
       :key="componentKey"
-      style="width: 25rem; margin-bottom: 2em; position:absolute; bottom:0; left:0;"
+      class="Infopopup p-shadow-2"
     >
       <template #title>
         <Button
@@ -88,7 +89,7 @@
           selectedscooter.status == 'damaged'
       "
       :key="componentKey"
-      style="width: 25rem; margin-bottom: 2em; position:absolute; bottom:0; left:0;"
+      class="Infopopup p-shadow-2"
     >
       <template #title>
         <Button
@@ -112,7 +113,7 @@
     <Card
       v-if="showscooterhotspotinfo === true && starttimestamp == 0"
       :key="componentKey"
-      style="width: 25rem; margin-bottom: 2em; position:absolute; bottom:0; left:0;"
+      class="Infopopup p-shadow-2"
     >
       <template #title>
         <Button
@@ -126,7 +127,7 @@
     <Card
       v-if="showmaintenancedepartmentinfo === true && starttimestamp == 0"
       :key="componentKey"
-      style="width: 25rem; margin-bottom: 2em; position:absolute; bottom:0; left:0;"
+      class="Infopopup p-shadow-2"
     >
       <template #title>
         <Button
@@ -600,11 +601,17 @@ export default defineComponent({
   max-width: 90vw;
 }
 
-mmap {
-  width: 60vw;
-  min-width: 360px;
+.Infopopup {
   text-align: center;
-  text-indent: -9999px;
+  width: 25rem;
+  margin-bottom: 1em;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.map {
+  text-indent: -100px;
   background-color: #ccc;
 }
 </style>

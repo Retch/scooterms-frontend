@@ -53,7 +53,7 @@ export default defineComponent({
     const showTopUpSuccess = () => {
       toast.add({
         severity: "success",
-        summary: "Scooter-MS Konto aufgeladen",
+        summary: "Guthaben aufgeladen",
         life: 1500,
         closeable: false
       });

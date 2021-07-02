@@ -188,7 +188,7 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style>
 .Toast {
   max-width: 90vw;
 }

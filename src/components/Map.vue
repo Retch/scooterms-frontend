@@ -595,16 +595,16 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-#map {
-  zwidth: 60vw;
-  zmin-width: 360px;
-  text-align: center;
-  gtext-indent: -9999px;
-  background-color: #ccc;
-}
-
+<style>
 .Toast {
   max-width: 90vw;
+}
+
+mmap {
+  width: 60vw;
+  min-width: 360px;
+  text-align: center;
+  text-indent: -9999px;
+  background-color: #ccc;
 }
 </style>

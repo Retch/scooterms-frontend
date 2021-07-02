@@ -472,7 +472,7 @@ export default defineComponent({
 
       // Instantiate (and display) a map object:
       const map = new H.Map(mapContainer, maptypes.vector.normal.map, {
-        zoom: 13,
+        zoom: 12,
         //center: this.center,
         center: { lat: 50.974321, lng: 11.0348092 },
         // center object { lat: 40.730610, lng: -73.935242 }

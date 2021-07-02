@@ -94,19 +94,21 @@ export default defineComponent({
       this.id = res.data.id;
     },
     async topUpAccount() {
-      const res = await axios({
-        method: "get",
-        url:
-          process.env.VUE_APP_API_ENDPOINT +
-          "/accountmgr/myaccount/topup/" +
-          this.topupamount,
-        headers: { Authorization: "Bearer " + this.$store.state.jwt }
-      }).catch(error => {
-        return { error: error };
-      });
-      this.topupamount = "";
-      if (res.status === 200) {
-        this.showTopUpSuccess();
+      if (this.topupamount != 0) {
+        const res = await axios({
+          method: "get",
+          url:
+            process.env.VUE_APP_API_ENDPOINT +
+            "/accountmgr/myaccount/topup/" +
+            this.topupamount,
+          headers: { Authorization: "Bearer " + this.$store.state.jwt }
+        }).catch(error => {
+          return { error: error };
+        });
+        this.topupamount = "";
+        if (res.status === 200) {
+          this.showTopUpSuccess();
+        }
       }
       this.fetchAccountInfo();
     }

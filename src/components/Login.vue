@@ -90,11 +90,22 @@ export default defineComponent({
       });
     };
 
+    const showNoValidEmailError = () => {
+      toast.add({
+        severity: "error",
+        summary: "Email nicht gültig",
+        detail: "Bitte eine gültige Email verwenden",
+        life: 5000,
+        closeable: false
+      });
+    };
+
     return {
       showLoginError,
       showRegistrationError,
       showLoginSuccess,
-      showRegistrationSuccess
+      showRegistrationSuccess,
+      showNoValidEmailError
     };
   },
   components: {
@@ -109,55 +120,68 @@ export default defineComponent({
     };
   },
   methods: {
+    validateEmail(email) {
+      const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(email);
+    },
     async login() {
-      const res = await axios({
-        method: "post",
-        url: process.env.VUE_APP_API_ENDPOINT + "/authenticate",
-        data: {
-          email: this.email,
-          password: this.password
-        }
-      }).catch(error => {
-        return { error: error };
-      });
-
-      if (res.status == 200) {
-        this.$toast.removeAllGroups();
-        this.showLoginSuccess();
-        const data = res.data;
-        this.jwt = data.token;
-        await new Promise(r => setTimeout(r, 2000));
-        //console.log(this.$jwt);
-        //this.$jwt = data.token;
-        //console.log(this.$jwt);
-        this.$emit("jwt-token", data.token);
-        this.$router.push("home");
-        this.$store.state.jwt = data.token;
+      this.email = this.email.toLowerCase();
+      if (!this.validateEmail(this.email)) {
+        this.showNoValidEmailError();
       } else {
-        this.$toast.removeAllGroups();
-        this.showLoginError();
+        console.log("Logging in: " + this.email);
+        const res = await axios({
+          method: "post",
+          url: process.env.VUE_APP_API_ENDPOINT + "/authenticate",
+          data: {
+            email: this.email,
+            password: this.password
+          }
+        }).catch(error => {
+          return { error: error };
+        });
+
+        if (res.status == 200) {
+          this.$toast.removeAllGroups();
+          this.showLoginSuccess();
+          const data = res.data;
+          this.jwt = data.token;
+          this.$emit("jwt-token", data.token);
+          console.log("Auth JWT: " + data.token);
+          await new Promise(r => setTimeout(r, 2000));
+          this.$router.push("home");
+          this.$store.state.jwt = data.token;
+        } else {
+          this.$toast.removeAllGroups();
+          this.showLoginError();
+        }
       }
     },
     async register() {
-      const res = await axios({
-        method: "post",
-        url: process.env.VUE_APP_API_ENDPOINT + "/register",
-        data: {
-          email: this.email,
-          password: this.password
-        }
-      }).catch(error => {
-        return { error: error };
-      });
-
-      if (res.status == 200) {
-        this.$toast.removeAllGroups();
-        this.showRegistrationSuccess();
-        const data = res.data;
-        console.log(data.email);
+      this.email = this.email.toLowerCase();
+      if (!this.validateEmail(this.email)) {
+        this.showNoValidEmailError();
       } else {
-        this.$toast.removeAllGroups();
-        this.showRegistrationError();
+        const res = await axios({
+          method: "post",
+          url: process.env.VUE_APP_API_ENDPOINT + "/register",
+          data: {
+            email: this.email,
+            password: this.password
+          }
+        }).catch(error => {
+          return { error: error };
+        });
+
+        if (res.status == 200) {
+          this.$toast.removeAllGroups();
+          this.showRegistrationSuccess();
+          const data = res.data;
+          console.log(data.email);
+        } else {
+          this.$toast.removeAllGroups();
+          this.showRegistrationError();
+        }
       }
     }
   }

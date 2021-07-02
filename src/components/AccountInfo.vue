@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Toast @click="this.$toast.removeAllGroups()" />
+    <Toast class="Toast" @click="this.$toast.removeAllGroups()" />
     <Card class="p-shadow-2 p-mb-5 p-mt-2">
       <template #title> Kundennummer: {{ id }} </template>
       <template #content>
@@ -115,3 +115,9 @@ export default defineComponent({
   }
 });
 </script>
+
+<style scoped>
+.Toast {
+  max-width: 90vw;
+}
+</style>

@@ -1,6 +1,6 @@
 <template>
   <div id="map">
-    <Toast @click="this.$toast.removeAllGroups()" />
+    <Toast class="Toast" @click="this.$toast.removeAllGroups()" />
     <!--In the following div the HERE Map will render-->
     <div
       id="mapContainer"
@@ -602,5 +602,9 @@ export default defineComponent({
   text-align: center;
   gtext-indent: -9999px;
   background-color: #ccc;
+}
+
+.Toast {
+  max-width: 90vw;
 }
 </style>

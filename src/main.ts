@@ -18,6 +18,8 @@ import InputText from 'primevue/inputtext';
 import Menubar from 'primevue/menubar';
 import Sidebar from 'primevue/sidebar';
 import Password from 'primevue/password';
+import Ripple from "primevue/ripple";
+
 
 
 const store = createStore({
@@ -48,6 +50,8 @@ app.component('Button', Button);
 app.component('Menubar', Menubar);
 app.component('Sidebar', Sidebar);
 app.component('Password', Password);
+app.directive('ripple', Ripple)
+
 
 
 app.mount("#app");

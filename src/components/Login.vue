@@ -1,6 +1,6 @@
 <template>
   <div class="p-d-flex">
-    <Toast class="Toast" />
+    <Toast class="Toast" @click="this.$toast.removeAllGroups()" />
     <div class="p-d-block p-mx-auto p-mt-6  ">
       <img
         class=""
@@ -28,12 +28,12 @@
         <Button
           label="Einloggen"
           @click="login()"
-          class="p-button-secondary p-mr-2 p-mt-1"
+          class="p-button-secondary p-mr-2 p-mt-1 p-shadow-1"
         />
         <Button
           @click="register()"
           label="Registrieren"
-          class="p-button-secondary"
+          class="p-button-secondary p-shadow-1"
         />
       </div>
     </div>
@@ -112,7 +112,7 @@ export default defineComponent({
     async login() {
       const res = await axios({
         method: "post",
-        url: "http://localhost:8080/authenticate",
+        url: process.env.VUE_APP_API_ENDPOINT + "/authenticate",
         data: {
           email: this.email,
           password: this.password
@@ -122,6 +122,7 @@ export default defineComponent({
       });
 
       if (res.status == 200) {
+        this.$toast.removeAllGroups();
         this.showLoginSuccess();
         const data = res.data;
         this.jwt = data.token;
@@ -133,13 +134,14 @@ export default defineComponent({
         this.$router.push("home");
         this.$store.state.jwt = data.token;
       } else {
+        this.$toast.removeAllGroups();
         this.showLoginError();
       }
     },
     async register() {
       const res = await axios({
         method: "post",
-        url: "http://localhost:8080/register",
+        url: process.env.VUE_APP_API_ENDPOINT + "/register",
         data: {
           email: this.email,
           password: this.password
@@ -149,10 +151,12 @@ export default defineComponent({
       });
 
       if (res.status == 200) {
+        this.$toast.removeAllGroups();
         this.showRegistrationSuccess();
         const data = res.data;
         console.log(data.email);
       } else {
+        this.$toast.removeAllGroups();
         this.showRegistrationError();
       }
     }

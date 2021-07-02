@@ -2,10 +2,12 @@
   <div class="p-d-block p-mx-auto p-mt-6" style="text-align: center">
     <h1>Sie werden nun abgemeldet...</h1>
     <img
-      class="p-mt-2"
+      class="p-mt-2 p-shadow-2"
       src="https://media.giphy.com/media/iYHgXVsV2NPWM/giphy.gif"
       alt="http://gph.is/2dj99m0"
-      style="width: 20vw"
+      style="min-width: 22vw;
+      max-width: 80vw;
+      border-radius: 2px"
     />
   </div>
 </template>

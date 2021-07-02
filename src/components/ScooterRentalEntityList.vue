@@ -1,16 +1,17 @@
 <template>
-  <div class="p-d-block p-mx-auto p-m-0 p-mt-6">
-    <div v-for="rental in rentals" :key="rental.id">
-      <Card class="p-mb-2 p-mx-auto" style="width: 25rem">>
-        <template #title> Fahrt #{{ rental.id }} </template>
-        <template #content>
-          Datum: {{ calcDate(rental.start_timestamp) }}<br />
-          Dauer:
-          {{ calcTime(rental.end_timestamp - rental.start_timestamp) }} Minuten
-        </template>
-      </Card>
-    </div>
-  </div>
+  <Card
+    v-for="rental in rentals"
+    :key="rental.id"
+    class="p-mb-4 p-ripple p-shadow-2"
+    v-ripple
+    >>
+    <template #title> Fahrt #{{ rental.id }} </template>
+    <template #content>
+      Dauer:
+      {{ calcTime(rental.end_timestamp - rental.start_timestamp) }} Minuten
+    </template>
+    <template #footer> Datum: {{ calcDate(rental.start_timestamp) }} </template>
+  </Card>
 </template>
 
 <script>
@@ -35,13 +36,13 @@ export default defineComponent({
     async fetchAccountRentals() {
       const res = await axios({
         method: "get",
-        url: "http://localhost:8080/accountmgr/myhistory",
+        url: process.env.VUE_APP_API_ENDPOINT + "/accountmgr/myhistory",
         headers: { Authorization: "Bearer " + this.$store.state.jwt }
       }).catch(error => {
         return { error: error };
       });
 
-      this.rentals = res.data;
+      this.rentals = res.data.reverse();
     },
     calcTime(seconds) {
       let minutes = 0;

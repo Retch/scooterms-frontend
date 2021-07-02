@@ -77,7 +77,7 @@ export default defineComponent({
     async fetchCredits() {
       const res = await axios({
         method: "get",
-        url: "http://localhost:8080/accountmgr/myaccount",
+        url: process.env.VUE_APP_API_ENDPOINT + "/accountmgr/myaccount",
         headers: { Authorization: "Bearer " + this.$store.state.jwt }
       }).catch((error) => {
         return { error: error };

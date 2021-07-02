@@ -1,6 +1,6 @@
 <template>
   <div id="map">
-    <Toast />
+    <Toast @click="this.$toast.removeAllGroups()" />
     <!--In the following div the HERE Map will render-->
     <div
       id="mapContainer"
@@ -256,7 +256,7 @@ export default defineComponent({
     async fetchScooters() {
       const res = await axios({
         method: "get",
-        url: "http://localhost:8080/scooters",
+        url: process.env.VUE_APP_API_ENDPOINT + "/scooters",
         headers: { Authorization: "Bearer " + this.$store.state.jwt }
       }).catch(error => {
         return { error: error };
@@ -268,7 +268,7 @@ export default defineComponent({
     async returnScooters() {
       const res = await axios({
         method: "get",
-        url: "http://localhost:8080/scooters",
+        url: process.env.VUE_APP_API_ENDPOINT + "/scooters",
         headers: { Authorization: "Bearer " + this.$store.state.jwt }
       }).catch(error => {
         return { error: error };
@@ -279,7 +279,7 @@ export default defineComponent({
     async fetchScooterHotspots() {
       const res = await axios({
         method: "get",
-        url: "http://localhost:8080/scooterhotspots",
+        url: process.env.VUE_APP_API_ENDPOINT + "/scooterhotspots",
         headers: { Authorization: "Bearer " + this.$store.state.jwt }
       }).catch(error => {
         return { error: error };
@@ -291,7 +291,7 @@ export default defineComponent({
     async fetchMaintenanceDepartments() {
       const res = await axios({
         method: "get",
-        url: "http://localhost:8080/maintenancedepartments",
+        url: process.env.VUE_APP_API_ENDPOINT + "/maintenancedepartments",
         headers: { Authorization: "Bearer " + this.$store.state.jwt }
       }).catch(error => {
         return { error: error };
@@ -365,7 +365,7 @@ export default defineComponent({
     },
     async driveScooter() {
       const scooterID = this.selectedscooter.id;
-      const api = "http://localhost:8080/scooters/rent/" + scooterID;
+      const api = process.env.VUE_APP_API_ENDPOINT + "/scooters/rent/" + scooterID;
       const res = await axios({
         method: "get",
         url: api,
@@ -386,7 +386,7 @@ export default defineComponent({
 
       await axios({
         method: "post",
-        url: "http://localhost:8080/scooters/park",
+        url: process.env.VUE_APP_API_ENDPOINT + "/scooters/park",
         headers: {
           Authorization: "Bearer " + this.$store.state.jwt,
           "content-type": "application/json"
@@ -407,10 +407,9 @@ export default defineComponent({
     },
     async chargeScooter() {
       const scooterID = this.selectedscooter.id;
-      const api = "http://localhost:8080/scooters/charge/" + scooterID;
       const res = await axios({
         method: "get",
-        url: api,
+        url: process.env.VUE_APP_API_ENDPOINT + "/scooters/charge/" + scooterID,
         headers: { Authorization: "Bearer " + this.$store.state.jwt }
       }).catch(error => {
         return { error: error };
@@ -424,10 +423,9 @@ export default defineComponent({
     },
     async repairScooter() {
       const scooterID = this.selectedscooter.id;
-      const api = "http://localhost:8080/scooters/repair/" + scooterID;
       const res = await axios({
         method: "get",
-        url: api,
+        url: process.env.VUE_APP_API_ENDPOINT + "/scooters/repair/" + scooterID,
         headers: { Authorization: "Bearer " + this.$store.state.jwt }
       }).catch(error => {
         return { error: error };
@@ -440,12 +438,12 @@ export default defineComponent({
       this.forceReloadScooterMap();
     },
     async releaseScooter() {
-      const api =
-        "http://localhost:8080/maintenancedepartments/releasescooter/" +
-        this.selectedmaintenancedepartment.id;
       const res = await axios({
         method: "get",
-        url: api,
+        url:
+          process.env.VUE_APP_API_ENDPOINT +
+          "/maintenancedepartments/releasescooter/" +
+          this.selectedmaintenancedepartment.id,
         headers: { Authorization: "Bearer " + this.$store.state.jwt }
       }).catch(error => {
         return { error: error };

@@ -1,13 +1,10 @@
 <template>
   <div>
     <Header />
-    <AccountInfo
-      style="display: inline-block;
-    margin-left: 40vw;
-    margin-right: auto;
-    text-align: left"
-    />
-    <RentalEntityList />
+    <div style="width: 35rem; max-width: 90vw" class="p-mx-auto">
+      <AccountInfo />
+      <RentalEntityList />
+    </div>
   </div>
 </template>
 

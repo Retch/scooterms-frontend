@@ -1,11 +1,11 @@
 <template>
+  <Toast class="Toast" @click="this.$toast.removeAllGroups()" />
   <i v-if="this.loading" class="pi pi-spin pi-spinner LoadingAnimation"></i>
   <div id="map">
-    <Toast class="Toast" @click="this.$toast.removeAllGroups()" />
     <!--In the following div the HERE Map will render-->
     <div
       id="mapContainer"
-      class="map"
+      class="map fade-in"
       style="height: 93vh"
       ref="hereMap"
       :key="scooterlist"
@@ -239,9 +239,7 @@ export default defineComponent({
     });
     this.platform = platform;
 
-    this.loading = true;
     await this.initializeHereMap();
-    this.loading = false;
   },
   created() {
     this.calcTimeInterval = setInterval(this.calcTime, 500);
@@ -467,6 +465,7 @@ export default defineComponent({
       // rendering map
       console.log("Loading map...");
       console.time();
+      this.loading = true;
 
       await this.fetchScooters();
       await this.fetchScooterHotspots();
@@ -599,12 +598,17 @@ export default defineComponent({
       // End rendering the initial map
       console.log("Ready, took...");
       console.timeEnd();
+      this.loading = false;
     }
   }
 });
 </script>
 
 <style>
+:root {
+  --animationspeed: 500ms;
+}
+
 .Toast {
   max-width: 90vw;
 }
@@ -635,5 +639,57 @@ export default defineComponent({
   font-size: 4rem;
   color: #2598F3;
   opacity: 0.7;
+}
+
+.fade-in {
+  animation: fadeIn ease var(--animationspeed);
+  -webkit-animation: fadeIn ease var(--animationspeed);
+  -moz-animation: fadeIn ease var(--animationspeed);
+  -o-animation: fadeIn ease var(--animationspeed);
+  -ms-animation: fadeIn ease var(--animationspeed);
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-moz-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-o-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-ms-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 </style>

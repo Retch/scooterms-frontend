@@ -1,4 +1,5 @@
 <template>
+  <i v-if="this.loading" class="pi pi-spin pi-spinner LoadingAnimation"></i>
   <div id="map">
     <Toast class="Toast" @click="this.$toast.removeAllGroups()" />
     <!--In the following div the HERE Map will render-->
@@ -227,7 +228,8 @@ export default defineComponent({
       showscooterhotspotinfo: false,
       showmaintenancedepartmentinfo: false,
       starttimestamp: 0,
-      rentaltime: 0
+      rentaltime: 0,
+      loading: false
     };
   },
   async mounted() {
@@ -237,7 +239,9 @@ export default defineComponent({
     });
     this.platform = platform;
 
-    this.initializeHereMap();
+    this.loading = true;
+    await this.initializeHereMap();
+    this.loading = false;
   },
   created() {
     this.calcTimeInterval = setInterval(this.calcTime, 500);
@@ -461,6 +465,8 @@ export default defineComponent({
     },
     async initializeHereMap() {
       // rendering map
+      console.log("Loading map...");
+      console.time();
 
       await this.fetchScooters();
       await this.fetchScooterHotspots();
@@ -591,6 +597,8 @@ export default defineComponent({
       // add UI
       //H.ui.UI.createDefault(map, maptypes);
       // End rendering the initial map
+      console.log("Ready, took...");
+      console.timeEnd();
     }
   }
 });
@@ -612,6 +620,20 @@ export default defineComponent({
 
 .map {
   text-indent: -100px;
-  background-color: #ccc;
+  background-color: white;
+}
+
+.LoadingAnimation {
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: auto;
+  left: 0;
+  right: 0;
+  top: 50vh;
+  text-align: center;
+  font-size: 4rem;
+  color: #2598F3;
+  opacity: 0.7;
 }
 </style>

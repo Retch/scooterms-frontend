@@ -368,7 +368,8 @@ export default defineComponent({
     },
     async driveScooter() {
       const scooterID = this.selectedscooter.id;
-      const api = process.env.VUE_APP_API_ENDPOINT + "/scooters/rent/" + scooterID;
+      const api =
+        process.env.VUE_APP_API_ENDPOINT + "/scooters/rent/" + scooterID;
       const res = await axios({
         method: "get",
         url: api,
@@ -377,8 +378,9 @@ export default defineComponent({
         return { error: error };
       });
 
-      //console.log(res.data);
-      this.starttimestamp = res.data;
+      console.log(Math.floor(Date.now() / 1000));
+      console.log(res.data);
+      this.starttimestamp = Math.floor(Date.now() / 1000);
       this.forceRerenderInfo();
     },
     async parkScooter() {
